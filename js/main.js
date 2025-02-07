@@ -70,5 +70,38 @@ new Vue({
             }
         },
 
+    },
+
+    watch:{
+        notes:{
+            handler(notes){
+                notes.forEach(card => {
+                    const completed = note.items.filter(i => i.completed).lenght;
+                    const total = card.items.lenght;
+                    const progress = completed / total;
+
+                    if (note.column == 1 && progress > 0.5) {
+                        if (this.secondNoteColumn.length < 5) {
+                            note.column = 2;
+                        }
+                    }
+
+                    else if (card.column === 2){
+                        if(progress < 0.5){
+                            card.column = 1;
+                        }
+
+                        else if (progress === 1){
+                            card.column = 3;
+
+                            if (!card.completedDate){
+                                card.completedDate = new Date().toLocaleString();
+                            }
+                        }
+                    }
+                });
+                this.saveNote();
+            }
+        }
     }
 })
