@@ -21,6 +21,7 @@ Vue.component('note-component', {
                 
             </li>
 <!--            <div v-if = "note.complateDate">Complete: {{ note.complate }}}</div>-->
+               <!--  доделать хтмл и накинуть функционал на кнопки-->
         </ul>
     `
 })
