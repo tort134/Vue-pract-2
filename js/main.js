@@ -29,7 +29,32 @@ new Vue({
     // },
 
     computed: {
+        fristNoteColumn(){
+            return this.note.filter(note => note.column == 1).slice(0,3);
+        },
 
+        secondNoteColumn(){
+            return this.note.filter(note => note.column == 1).slice(0, 5);
+        },
+
+        thirdNoteColumn(){
+            return this.note.filter(note => note.column ==3);
+        },
+
+        ifSecondColumnFull(){
+            return this.secondNoteColumn.length >= 5;
+        },
+
+        anyFirstColumnOver50Procent(){
+            return this.fristNoteColumn.some(card => {
+                const completed = card.items.filter(i => i.completed).length;
+                return completed / card.items.length > 0.5;
+            })
+        },
+
+        ifFirstColumnBlocked(){
+            return this.ifSecondColumnFull && this.anyFirstColumnOver50Procent;
+        }
     },
 
     methods: {
