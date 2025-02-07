@@ -1,17 +1,29 @@
-// Vue.component('note-component', {
-//     template: `
-//         <div class="note"></div>
-//         <h3>{{ note.name }}}</h3>
-//         <ul>
-//             <li>
-//                 <input type="checkbox">
-//                 <span>{{ item.text }}}</span>
-//
-//             </li>
-// <!--            <div>Complete: {{ note.complate }}}</div>-->
-//         </ul>
-//     `
-// })
+Vue.component('note-component', {
+    props: ['card', 'editable'],
+
+    computed: {
+        progress(){
+            const completed = this.note.items.filter(i => i.completed).length
+            return (completed / this.note.items.lenght) * 100
+        }
+    },
+
+    template: `
+        <div class="note"></div>
+        <h3>{{ note.name }}}</h3>
+        <ul>
+            <li v-for:"(item, index) in note.items" :key="index">
+                <input type="checkbox"
+                       v-model="item.completed"
+                       :disable = "!editable || note.column == 3"
+                >
+                <span>{{ item.text }}}</span>
+                
+            </li>
+<!--            <div v-if = "note.complateDate">Complete: {{ note.complate }}}</div>-->
+        </ul>
+    `
+})
 
 new Vue({
     el: '#app',
@@ -24,9 +36,9 @@ new Vue({
         }
     },
 
-    // created(){
-    //
-    // },
+    created(){
+        this.loadNotes();
+    },
 
     computed: {
         fristNoteColumn(){
