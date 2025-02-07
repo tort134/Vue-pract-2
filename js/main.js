@@ -70,6 +70,36 @@ new Vue({
             }
         },
 
+        createNote(){
+            if(!this.newNoteItems.trim() || this.newNoteItems.some(i => !i.trim())){
+                alert('Fill all fields');
+
+                return
+            }
+
+            this.notes.push({
+                id: Date.now,
+                name: this.newNoteName,
+                items: this.newNoteItems.map(text => ({text, completed: false})),
+                column: 1,
+                complateDate: null
+            })
+
+            this.newNoteName = ''
+            this.newNoteItems= ['', '', '']
+        },
+
+        saveNotes(){
+            localStorage.setItem('notes', JSON.stringify(this.notes))
+        },
+
+        loadNotes(){
+            const savedNotes = localStorage.getItem('notes')
+            if(savedNotes){
+                this.notes = JSON.parse(savedNotes)
+            }
+        }
+
     },
 
     watch:{
