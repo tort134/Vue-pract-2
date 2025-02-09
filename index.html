@@ -10,25 +10,35 @@
 <body>
     <div id="app">
         <div class="columns">
-            <div class="column">
+            <div class="column" :class="{'blocked': ifFirstColumnBlocked}">
                 <h2>To do, 3 max</h2>
-
+                <div v-for="note in firstNoteColumn" :key="note.id">
+                    <note-component :note="note" :editable="!ifFirstColumnBlocked"/>
+                </div>
             </div>
-            <div class="column">
+
+            <div class="column" >
                 <h2>In progress, 5 max</h2>
-
+                <div v-for="note in secondNoteColumn" :key="note.id">
+                    <note-component :note="note" :editable="true"/>
+                </div>
             </div>
+
             <div class="column">
                 <h2>Complete</h2>
-
+                <div v-for="note in thirdNoteColumn" :key="note.id">
+                    <note-component :note="note"/>
+                </div>
             </div>
         </div>
         <div class="add_note">
-
+            <input v-model="newNoteName" placeholder="Note Name">
+                <div v-for="(item, index) in newNoteItems" :key="index">
+            <input v-model="newNoteItems[index]" placeholder="Item text">
         </div>
-        <button>Add item</button>
-        <button>Add in to do</button>
-        <button class="remove_button">Remove item</button>
+        <button @click="addItem" :disabled="newNoteItems.length >= 5">Add item</button>
+        <button @click="createNote">Add in to do</button>
+        <button @click="removeItem" :disabled="newNoteItems.length <= 3" class="remove_button">Remove item</button>
     </div>
 </body>
 </html>

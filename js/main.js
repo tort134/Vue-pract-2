@@ -1,28 +1,27 @@
 Vue.component('note-component', {
-    props: ['card', 'editable'],
+    props: ['note', 'editable'],
 
     computed: {
         progress(){
             const completed = this.note.items.filter(i => i.completed).length
-            return (completed / this.note.items.lenght) * 100
+            return (completed / this.note.items.length) * 100
         }
     },
 
     template: `
-        <div class="note"></div>
-        <h3>{{ note.name }}}</h3>
-        <ul>
-            <li v-for:"(item, index) in note.items" :key="index">
-                <input type="checkbox"
-                       v-model="item.completed"
-                       :disable = "!editable || note.column == 3"
-                >
-                <span>{{ item.text }}}</span>
-                
-            </li>
-<!--            <div v-if = "note.complateDate">Complete: {{ note.complate }}}</div>-->
-               <!--  доделать хтмл и накинуть функционал на кнопки-->
-        </ul>
+        <div class="note">
+            <h3>{{ note.name }}</h3>
+            <ul>
+                <li v-for="(item, index) in note.items" :key="item.id">
+                    <input type="checkbox"
+                           v-model="item.completed"
+                           :disabled="!editable || note.column == 3"
+                    >
+                    <span>{{ item.text }}</span>
+                </li>
+                <div v-if="note.completeDate">Complete: {{ note.completeDate }}</div>
+            </ul>
+        </div>
     `
 })
 
@@ -33,7 +32,6 @@ new Vue({
             note: [],
             newNoteName: '',
             newNoteItems: ['', '', ''],
-
         }
     },
 
@@ -42,12 +40,12 @@ new Vue({
     },
 
     computed: {
-        fristNoteColumn(){
+        firstNoteColumn(){
             return this.note.filter(note => note.column == 1).slice(0,3);
         },
 
         secondNoteColumn(){
-            return this.note.filter(note => note.column == 1).slice(0, 5);
+            return this.note.filter(note => note.column == 2).slice(0, 5);
         },
 
         thirdNoteColumn(){
@@ -59,9 +57,9 @@ new Vue({
         },
 
         anyFirstColumnOver50Procent(){
-            return this.fristNoteColumn.some(card => {
-                const completed = card.items.filter(i => i.completed).length;
-                return completed / card.items.length > 0.5;
+            return this.note.filter(note => note.column == 1).some(note => {
+                const completed = note.items.filter(i => i.completed).length;
+                return completed / note.items.length > 0.5;
             })
         },
 
@@ -73,78 +71,80 @@ new Vue({
     methods: {
         addItem(){
             if(this.newNoteItems.length < 5){
-                this.newNoteItems.push();
+                this.newNoteItems.push('');
             }
         },
 
         removeItem(){
             if(this.newNoteItems.length >3){
-                this.newNoteItemspop();
+                this.newNoteItems.pop();
             }
         },
 
         createNote(){
-            if(!this.newNoteItems.trim() || this.newNoteItems.some(i => !i.trim())){
+            if(!this.newNoteName.trim() || this.newNoteItems.some(i => !i.trim())){
                 alert('Fill all fields');
 
-                return
+                return;
             }
 
-            this.notes.push({
-                id: Date.now,
+            this.note.push({
+                id: Date.now(),
                 name: this.newNoteName,
                 items: this.newNoteItems.map(text => ({text, completed: false})),
                 column: 1,
-                complateDate: null
-            })
+                completeDate: null
+            });
 
-            this.newNoteName = ''
-            this.newNoteItems= ['', '', '']
+            this.newNoteName = '';
+            this.newNoteItems= ['', '', ''];
         },
 
         saveNotes(){
-            localStorage.setItem('notes', JSON.stringify(this.notes))
+            localStorage.setItem('note', JSON.stringify(this.note))
         },
 
         loadNotes(){
-            const savedNotes = localStorage.getItem('notes')
+            const savedNotes = localStorage.getItem('note');
+
             if(savedNotes){
-                this.notes = JSON.parse(savedNotes)
+                this.note = JSON.parse(savedNotes);
             }
         }
 
     },
 
     watch:{
-        notes:{
-            handler(notes){
-                notes.forEach(card => {
-                    const completed = note.items.filter(i => i.completed).lenght;
-                    const total = card.items.lenght;
+        note:{
+            handler(note){
+                note.forEach(note => {
+                    const completed = note.items.filter(i => i.completed).length;
+                    const total = note.items.length;
                     const progress = completed / total;
 
-                    if (note.column == 1 && progress > 0.5) {
-                        if (this.secondNoteColumn.length < 5) {
+                    if(note.column == 1 && progress > 0.5){
+                        if(this.secondNoteColumn.length < 5){
                             note.column = 2;
                         }
                     }
 
-                    else if (card.column === 2){
+                    else if(note.column === 2){
                         if(progress < 0.5){
-                            card.column = 1;
+                            note.column = 1;
                         }
 
-                        else if (progress === 1){
-                            card.column = 3;
+                        else if(progress === 1){
+                            note.column = 3;
 
-                            if (!card.completedDate){
-                                card.completedDate = new Date().toLocaleString();
+                            if(!note.completedDate){
+                                note.completedDate = new Date().toLocaleString();
                             }
                         }
                     }
                 });
-                this.saveNote();
-            }
+                this.saveNotes();
+            },
+            deep: true 
         }
     }
 })
