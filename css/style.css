@@ -1,28 +1,80 @@
-*{
-    list-style: none;
+body{
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
 }
 
 .columns{
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
-button{
-    background-color: black;
-    color: orange;
-    transition: 0.3s;
+.column{
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 30%;
+}
+
+.column h2{
+    text-align: center;
+    color: #333;
+}
+
+.note{
+    background: #e9ecef;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 10px;
+}
+
+.note h3{
+    margin: 0 0 10px;
+}
+
+.note ul{
+    list-style-type: none;
+    padding: 0;
+}
+
+.note li{
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.note input[type="checkbox"]{
+    margin-right: 10px;
+}
+
+.add_note{
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
+
+.add_note input{
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.add_note button{
+    background: #007bff;
+    color: white;
     border: none;
     padding: 10px;
-    border-radius: 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
 }
 
-button:hover{
-    background-color: orange;
-    color: black;
-}
-
-.remove_button:hover{
-    background-color: red;
-    color: black;
+.remove_button{
+    background: #dc3545;
 }

@@ -88,6 +88,7 @@ new Vue({
                 return;
             }
 
+        if(this.firstNoteColumn.length < 3){
             this.note.push({
                 id: Date.now(),
                 name: this.newNoteName,
@@ -95,6 +96,11 @@ new Vue({
                 column: 1,
                 completeDate: null
             });
+        }
+
+        else{
+            alert("You can't add more note in 'to do'")
+        }
 
             this.newNoteName = '';
             this.newNoteItems= ['', '', ''];
